@@ -29,8 +29,18 @@ config_dict = {}
 # Load config.yml into config_dict
 def loadConfig():
     global config_dict
-    with open('config.yml', 'r') as config:
-        config_dict = yaml.load(config, Loader=yaml.FullLoader)
+    try:
+        with open('config.yml', 'r') as config:
+            config_dict = yaml.load(config, Loader=yaml.FullLoader)
+    
+    except FileNotFoundError:
+        data = dict(
+            virusshare_version = 0
+        )
+        with open('config.yml', 'w') as f:
+            yaml.dump(data, f, default_flow_style=False)
+        
+        loadConfig()
 
 
 # Check in config if the hash list is up to date
